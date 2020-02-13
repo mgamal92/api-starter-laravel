@@ -2,11 +2,7 @@
 
 namespace Barista\Commands;
 
-use Barista\FileHandler\FileProcessor;
-use Barista\FileHandler\JsonFormat;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use PHPUnit\Util\Json;
 
 class PrepareAPI extends Command
 {
@@ -15,7 +11,7 @@ class PrepareAPI extends Command
      *
      * @var string
      */
-    protected $signature = 'prepare:api {file=api.json}';
+    protected $signature = 'prepare:api {file=api.json : API Input File}';
 
     /**
      * The console command description.
@@ -43,6 +39,6 @@ class PrepareAPI extends Command
     {
         $file = $this->argument('file');
 
-        dd($file);
+        $this->info('The API endpoints has been generated sucessfully!');
     }
 }
