@@ -14,5 +14,12 @@
         "psr-4": {
             "Barista\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Barista\\BaristaServiceProvider"
+            ]
+        }
     }
 }
