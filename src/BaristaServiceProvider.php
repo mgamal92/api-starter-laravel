@@ -2,6 +2,7 @@
 
 namespace Barista;
 
+use Barista\Commands\PrepareAPI;
 use Illuminate\Support\ServiceProvider;
 
 class BaristaServiceProvider extends ServiceProvider
@@ -23,6 +24,6 @@ class BaristaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->commands([PrepareAPI::class]);
     }
 }
