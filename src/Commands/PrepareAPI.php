@@ -48,6 +48,8 @@ class PrepareAPI extends Command
     {
         $file = $this->argument('file');
 
+        echo "\n";
+        
         $this->builder->generateModels();
         
         echo "\n";

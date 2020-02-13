@@ -4,6 +4,10 @@ namespace Barista;
 
 final class Builder
 {
+    public function __construct()
+    {
+        echo "preparing...";
+    }
 
     public function generateModels()
     {
