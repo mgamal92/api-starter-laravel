@@ -14,7 +14,7 @@ class BaristaServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->commands([PrepareAPI::class]);
     }
 
     /**
@@ -24,6 +24,8 @@ class BaristaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->commands([PrepareAPI::class]);
+        $this->publishes([
+            __DIR__.'/../config/barista.php' => config_path('barista.php'),
+        ], 'config');
     }
 }
