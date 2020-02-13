@@ -2,7 +2,9 @@
 
 namespace Barista\Commands;
 
+use Barista\Builder;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 
 class PrepareAPI extends Command
 {
@@ -21,13 +23,20 @@ class PrepareAPI extends Command
     protected $description = 'Prepare your api with docs';
 
     /**
+     * @var Builder
+     */
+    private $builder;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Builder $builder)
     {
         parent::__construct();
+
+        $this->builder = $builder;
     }
 
     /**
@@ -39,6 +48,21 @@ class PrepareAPI extends Command
     {
         $file = $this->argument('file');
 
+        $this->builder->generateModels();
+        
+        echo "\n";
+        $this->builder->generateControllers();
+
+        echo "\n";
+        $this->builder->generateRoutes();
+
+        echo "\n";
+        $this->builder->generateMigrations();
+
+        echo "\n";
+        $this->builder->generateFactory();
+        
+        echo "\n";
         $this->info('The API endpoints has been generated sucessfully!');
     }
 }
