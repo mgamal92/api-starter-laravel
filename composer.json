@@ -1,0 +1,13 @@
+{
+    "name": "mgamal/barista",
+    "description": "Create your API with docs",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohamed Gamal",
+            "email": "mg.dev1992@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
