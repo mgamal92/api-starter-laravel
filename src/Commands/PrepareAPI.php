@@ -3,8 +3,8 @@
 namespace Barista\Commands;
 
 use Barista\Builder;
+use Barista\Parser;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 
 class PrepareAPI extends Command
 {
@@ -28,15 +28,21 @@ class PrepareAPI extends Command
     private $builder;
 
     /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(Builder $builder)
+    public function __construct(Builder $builder, Parser $parser)
     {
         parent::__construct();
 
         $this->builder = $builder;
+        $this->parser = $parser;
     }
 
     /**
@@ -49,8 +55,10 @@ class PrepareAPI extends Command
         $file = $this->argument('file');
 
         echo "\n";
+
+        dd($this->parser->getContent(__DIR__.'/../../../../../'.$file));
         
-        $this->builder->generateModels();
+        // dd($this->builder->generateModels());
         
         echo "\n";
         $this->builder->generateControllers();
