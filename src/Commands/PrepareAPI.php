@@ -56,9 +56,13 @@ class PrepareAPI extends Command
 
         echo "\n";
 
-        dd($this->parser->getContent(__DIR__.'/../../../../../'.$file));
-        
-        // dd($this->builder->generateModels());
+        $tree = $this->parser->getContent(__DIR__.'/../../../../../'.$file);
+
+        $this->builder->prepare($tree);
+
+        $models = $this->builder->generateModels();
+
+        dd($models);
         
         echo "\n";
         $this->builder->generateControllers();

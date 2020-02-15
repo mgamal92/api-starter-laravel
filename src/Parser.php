@@ -28,8 +28,6 @@ final class Parser
 
         } else {
             throw new ExtensionFileException;
-        }
-
-        
+        }       
     }
 }

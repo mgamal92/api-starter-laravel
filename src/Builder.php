@@ -4,14 +4,16 @@ namespace Barista;
 
 final class Builder
 {
-    public function __construct()
+    private $tree;
+
+    public function prepare($tree)
     {
-        echo "preparing...";
+        $this->tree = $tree;
     }
 
     public function generateModels()
     {
-        echo "generating models...";
+        return $this->tree['models'];
     }
     
     public function generateControllers()
