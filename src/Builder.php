@@ -2,19 +2,11 @@
 
 namespace Barista;
 
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
+use Barista\Facades\ModelFacade;
 
 final class Builder
 {
     private $tree;
-
-    private $filesystem;
-
-    public function __construct(Filesystem $filesystem )
-    {
-        $this->filesystem = $filesystem;
-    }
 
     public function prepare($tree)
     {
@@ -23,41 +15,12 @@ final class Builder
 
     public function generateModels()
     {
-        $models = $this->tree['models'];
-
-        foreach ($models as $model => $properties) {
-
-            $modelClass = $this->filesystem->get(__DIR__.'/../stubs/model/class.stub');
-
-            // model namespace
-            $modelClass = str_replace('DummyNamespace', 'App', $modelClass);
-
-            // model name
-            $modelClass = str_replace('DummyClass', Str::studly($model) , $modelClass);
-
-
-            $fillable = $this->filesystem->get(__DIR__.'/../stubs/model/fillable.stub');
-
-            $data = array_keys($properties);
-
-            $output = var_export($data, true);
-            $output = preg_replace('/^\s+/m', '        ', $output);
-            $output = preg_replace(['/^array\s\(/', "/\)$/"], ['[', '    ]'], $output);
-
-            $output = preg_replace('/^(\s+)[^=]+=>\s+/m', '$1', $output);
-
-            $properties = PHP_EOL. str_replace('[]', trim($output), $fillable);
-
-            $modelClass = str_replace('// ...', $properties, $modelClass);
-
-
-            $this->filesystem->put(__DIR__.'/../../../../app/'. Str::studly($model) .'.php', $modelClass);
+        foreach ($this->tree['models'] as $model => $properties) {
+            (new ModelFacade)->populate($model, $properties);
         }
-
-
-
     }
     
+
     public function generateControllers()
     {
         echo "generating controllers...";

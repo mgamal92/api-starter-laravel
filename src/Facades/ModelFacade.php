@@ -1,0 +1,31 @@
+<?php
+
+namespace Barista\Facades;
+
+use Barista\Helpers\Model;
+use Illuminate\Filesystem\Filesystem;
+
+final class ModelFacade
+{
+    private $modelHelper;
+
+    public function __construct()
+    {
+        $this->modelHelper = new Model(new Filesystem);
+    }
+
+    public function populate($model, $properties)
+    {    
+        $this->modelHelper->getClassStub();
+
+        $this->modelHelper->populateNamespace();
+
+        $this->modelHelper->populateName($model);
+
+        $this->modelHelper->getFillableStub();
+
+        $this->modelHelper->populateProperties($properties);
+        
+        $this->modelHelper->populateModel();
+    }
+}
