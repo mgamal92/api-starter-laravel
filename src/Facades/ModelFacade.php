@@ -15,17 +15,19 @@ final class ModelFacade
     }
 
     public function populate($model, $properties)
-    {    
+    {
         $this->modelHelper->getClassStub();
 
         $this->modelHelper->populateNamespace();
 
         $this->modelHelper->populateName($model);
 
-        $this->modelHelper->getFillableStub();
+        $this->modelHelper->populateFillable();
 
         $this->modelHelper->populateProperties($properties);
-        
+
+        $this->modelHelper->populateRelation($properties);
+
         $this->modelHelper->populateModel();
     }
 }
