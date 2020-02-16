@@ -19,8 +19,7 @@ final class Parser
 
     public function getContent($fileName)
     {
-        $extension = $this->fileSystem->extension($fileName);
-        $content = $this->fileSystem->get($fileName);
+        list($content, $extension) =  $this->getFileDetails($fileName);
 
         if (in_array($extension, config('barista.api_file_formats'))) {
             
@@ -28,6 +27,15 @@ final class Parser
 
         } else {
             throw new ExtensionFileException;
-        }       
+        }
     }
+
+    public function getFileDetails($fileName)
+    {
+        $extension = $this->fileSystem->extension($fileName);
+        $content = $this->fileSystem->get($fileName);
+
+        return [$content, $extension];
+    }
+
 }
