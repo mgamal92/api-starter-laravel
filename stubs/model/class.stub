@@ -4,7 +4,6 @@ namespace DummyNamespace;
 
 use Illuminate\Database\Eloquent\Model;
 
-/** DummyPHPDocClass **/
 class DummyClass extends Model
 {
     // ...
