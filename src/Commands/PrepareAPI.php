@@ -59,9 +59,8 @@ class PrepareAPI extends Command
         $this->builder->prepare($tree);
 
         $this->builder->generateModels();
-        
-        // echo "\n";
-        // $this->builder->generateMigrations();
+
+        $this->builder->generateMigrations();
 
         // echo "\n";
         // $this->builder->generateFactory();

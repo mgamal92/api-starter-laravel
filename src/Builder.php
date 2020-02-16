@@ -2,6 +2,7 @@
 
 namespace Barista;
 
+use Barista\Facades\MigrationFacade;
 use Barista\Facades\ModelFacade;
 
 final class Builder
@@ -20,6 +21,12 @@ final class Builder
         }
     }
     
+    public function generateMigrations()
+    {
+        foreach ($this->tree['models'] as $model => $properties) {
+            (new MigrationFacade)->populate($model, $properties);
+        }
+    }
 
     public function generateControllers()
     {
@@ -29,11 +36,6 @@ final class Builder
     public function generateRoutes()
     {
         echo "generating routes...";
-    }
-
-    public function generateMigrations()
-    {
-        echo "generating migrations...";
     }
 
     public function generateFactory()
