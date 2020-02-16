@@ -7,29 +7,15 @@ use Illuminate\Support\Str;
 
 final class Model
 {
-    private $filesystem;
-
-    private $modelName;
-
-    private $modelClass;
-
-    private $fillable;
-
-    private $method;
+    const STUB_PATH = __DIR__.'/../../stubs/model/';
 
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-    }
 
-    public function getClassStub()
-    {
-        $this->modelClass = $this->filesystem->get(__DIR__.'/../../stubs/model/class.stub');
-    }
-
-    public function populateFillable()
-    {
-        $this->fillable = $this->filesystem->get(__DIR__.'/../../stubs/model/fillable.stub');
+        // init stubs
+        $this->modelClass = $this->filesystem->get(self::STUB_PATH.'class.stub');
+        $this->fillable = $this->filesystem->get(self::STUB_PATH.'fillable.stub');
     }
 
     public function populateNamespace()
@@ -45,52 +31,75 @@ final class Model
 
     public function populateProperties($properties)
     {
-        $data = array_keys($properties);
-
-        $output = var_export($data, true);
-        $output = preg_replace('/^\s+/m', '        ', $output);
-        $output = preg_replace(['/^array\s\(/', "/\)$/"], ['[', '    ]'], $output);
-
-        $output = preg_replace('/^(\s+)[^=]+=>\s+/m', '$1', $output);
-
+        $output = $this->formatPropertiesArray($properties);
+        
         $properties = PHP_EOL. str_replace('[]', trim($output), $this->fillable);
 
         $this->modelClass = str_replace('// properties', trim($properties), $this->modelClass);
+    }
+
+    public function formatPropertiesArray($properties)
+    {
+        // properties name
+        $data = array_keys($properties);
+
+        // convert array to string
+        $output = var_export($data, true);
+    
+        // make indentation
+        $output = preg_replace('/^\s+/m', '        ', $output);
+
+        // remove array keywork and replace it with square brackets
+        $output = preg_replace(['/^array\s\(/', "/\)$/"], ['[', '    ]'], $output);
+
+        // remove array index
+        $output = preg_replace('/^(\s+)[^=]+=>\s+/m', '$1', $output);
+
+        return $output;
     }
 
     public function populateRelation($properties)
     {
         $methods = null;
 
-        $columns = array_keys($properties);
+        $foreignKeys = $this->getForeignKeys($properties);
 
-        $foreignKeys = array_filter($columns, function ($column) {
-            return strpos($column, '_id');
-        });
+        foreach($foreignKeys as $foreignKey) {
+            $this->method = $this->filesystem->get(self::STUB_PATH.'method.stub');
 
-
-        if (!empty($foreignKeys)) {
-            foreach($foreignKeys as $foreignKey) {
-                $this->method = $this->filesystem->get(__DIR__.'/../../stubs/model/method.stub');
-    
-                $relationName = Str::beforeLast($foreignKey, '_id');
-    
-                $relationClass = Str::studly($relationName);
-    
-                $relationStatement  = sprintf("\$this->belongsTo(%s::class)",  $relationClass);
-    
-                $this->method = str_replace('null', $relationStatement , $this->method);
-
-                $this->method =  str_replace('DummyName', $relationName , $this->method) . PHP_EOL;
-
-                $methods .= PHP_EOL. $this->method;
-            }
+            $methods .= $this->buildRelationMethod($foreignKey);
         }
         
         $this->modelClass = str_replace('// methods',  trim($methods), $this->modelClass);
     }
 
-    public function populateModel()
+    public function getForeignKeys($properties)
+    {
+        $columns = array_keys($properties);
+
+        return array_filter($columns, function ($column) {
+            return strpos($column, '_id');
+        });
+    }
+
+    public function buildRelationMethod($foreignKey)
+    {
+        // remove _id from string
+        $relationName = Str::beforeLast($foreignKey, '_id');
+
+        // generate relation class name
+        $relationClass = Str::studly($relationName);
+
+        // generate relation statement
+        $relationStatement  = sprintf("\$this->belongsTo(%s::class)",  $relationClass);
+
+        $this->method = str_replace('null', $relationStatement , $this->method);
+        $this->method =  str_replace('DummyName', $relationName , $this->method) . PHP_EOL;
+
+        return PHP_EOL. $this->method;
+    }
+
+    public function writeModelInFile()
     {
         $this->filesystem->put(__DIR__.'/../../../../../app/'. $this->modelName .'.php', $this->modelClass);
     }
