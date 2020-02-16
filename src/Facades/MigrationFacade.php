@@ -2,28 +2,26 @@
 
 namespace Barista\Facades;
 
-use Barista\Helpers\Model;
+use Barista\Helpers\Migration;
 use Illuminate\Filesystem\Filesystem;
 
 final class MigrationFacade
 {
-    private $modelHelper;
+    private $migrationHelper;
 
     public function __construct()
     {
-        $this->modelHelper = new Model(new Filesystem);
+        $this->migrationHelper = new Migration(new Filesystem);
     }
 
     public function populate($model, $properties)
     {
-        $this->modelHelper->populateNamespace();
+        $this->migrationHelper->populateName($model);
 
-        $this->modelHelper->populateName($model);
+        $this->migrationHelper->populateTableName($model);
 
-        $this->modelHelper->populateProperties($properties);
+        $this->migrationHelper->populateColumns($properties);
 
-        $this->modelHelper->populateRelation($properties);
-
-        $this->modelHelper->writeModelInFile();
+        $this->migrationHelper->writeMigrationInFile();
     }
 }
