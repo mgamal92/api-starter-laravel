@@ -35,6 +35,18 @@ final class Migration
 
     public function populateColumns($properties)
     {
+        $definations = null;
+
+        foreach ($properties as $column => $details) {
+            foreach ($details as $key => $detail) {
+                if ($key == 'type') {
+                    $definations .= "            ". sprintf("\$table->%s(\"%s\");", $detail, $column);
+                    $definations .= PHP_EOL;
+                }
+            }
+        }
+
+        $this->migrationClass = str_replace('// definition...', trim($definations) , $this->migrationClass);
     }
 
     public function writeMigrationInFile()
