@@ -9,6 +9,8 @@ final class Migration
 {
     private const STUB_PATH = __DIR__.'/../../stubs/database/';
 
+    private const INDENTATION = "            ";
+    
     private $tableName;
 
     public function __construct(Filesystem $filesystem)
@@ -40,10 +42,17 @@ final class Migration
         foreach ($properties as $column => $details) {
             foreach ($details as $key => $detail) {
                 if ($key == 'type') {
-                    $definations .= "            ". sprintf("\$table->%s(\"%s\");", $detail, $column);
-                    $definations .= PHP_EOL;
+                    $definations .= self::INDENTATION . "\$table->$detail(\"$column\"";
+                } 
+                
+                if ($key == 'length') {
+                    $definations .= ", $detail";
                 }
             }
+
+            $definations .= ");";
+
+            $definations .= PHP_EOL; 
         }
 
         $this->migrationClass = str_replace('// definition...', trim($definations) , $this->migrationClass);
