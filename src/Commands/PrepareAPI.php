@@ -68,8 +68,7 @@ class PrepareAPI extends Command
         // echo "\n";
         // $this->builder->generateControllers();
 
-        // echo "\n";
-        // $this->builder->generateRoutes();
+        $this->builder->generateRoutes();
         
         $this->info('The API endpoints has been generated sucessfully!');
     }
