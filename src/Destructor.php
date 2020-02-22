@@ -22,6 +22,11 @@ final class Destructor
     {
         $modelsToRemove = array_keys($tree['models']); 
 
+        $routesFilePath = base_path().'/routes/api.php';
+
+        $allRoutes = $this->filesystem->get($routesFilePath);
+
+
         foreach ($modelsToRemove as $model) {
 
             $this->deleteModel($model);
@@ -33,7 +38,18 @@ final class Destructor
                     $this->deleteMigrationFile($migrationFile);
                 }
             }
+
+            $slug = Str::kebab(Str::plural($model));
+            $controller = Str::studly($model).'Controller';
+
+            $routesComment = '// '.$slug .' endpoints';
+            $routes =  sprintf("Route::resource('%s', '%s');", $slug, $controller);
+
+            $allRoutes = str_replace($routesComment, "", $allRoutes);
+            $allRoutes = str_replace($routes, "", $allRoutes);
         }
+
+        $this->filesystem->put($routesFilePath, trim($allRoutes));
     }
 
     public function deleteModel($model)
@@ -59,5 +75,24 @@ final class Destructor
     public function deleteMigrationFile($migrationFile)
     {
         $this->filesystem->delete(base_path().'/database/migrations/'. basename($migrationFile));   
+    }
+
+    public function deleteRoute($allRoutes, $model)
+    {
+        $slug = Str::kebab(Str::plural($model));
+        $controller = Str::studly($model).'Controller';
+
+        $routesComment = '// '.$slug .' endpoints';
+        $routes =  sprintf("Route::resource('%s', '%s');", $slug, $controller);
+
+        $allRoutes = str_replace($routesComment, "", $allRoutes);
+        $allRoutes .= str_replace($routes, "", $allRoutes);
+
+
+        
+
+        
+
+        
     }
 }
