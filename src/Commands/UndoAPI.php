@@ -2,10 +2,10 @@
 
 namespace Barista\Commands;
 
+use Barista\Destructor;
 use Barista\Parser;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 
 class UndoAPI extends Command
 {
@@ -56,23 +56,10 @@ class UndoAPI extends Command
     {
         $file = $this->argument('file');
 
-        $tree = $this->parser->getContent(__DIR__.'/../../../../../'.$file);
+        $tree = $this->parser->getContent(base_path().'/'.$file);
 
-        $modelsToRemove = array_keys($tree['models']); 
+        (new Destructor($this->filesystem))->destruct($tree);
 
-        foreach ($modelsToRemove as $model) {
-            $this->filesystem->delete(__DIR__.'/../../../../../app/'. $model.'.php');
-
-            $this->filesystem->delete(__DIR__.'/../../../../../app/Http/Controllers'. $model.'Controller.php');
-
-            $migrationFileToRemove = 'create_'.Str::snake(Str::pluralStudly($model)).'_table';
-
-            foreach ($this->filesystem->files(__DIR__.'/../../../../../database/migrations/') as $migrationFile) {
-                if (strpos($migrationFile, $migrationFileToRemove) !== FALSE) {
-                    $this->filesystem->delete(__DIR__.'/../../../../../database/migrations/'. basename($migrationFile));   
-                }
-            }
-            
-        }
+        $this->info('The Generate API files have been destructed sucessfully!');
     }
 }
