@@ -3,6 +3,7 @@
 namespace Barista;
 
 use Barista\Commands\PrepareAPI;
+use Barista\Commands\UndoAPI;
 use Illuminate\Support\ServiceProvider;
 
 class BaristaServiceProvider extends ServiceProvider
@@ -14,7 +15,10 @@ class BaristaServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->commands([PrepareAPI::class]);
+        $this->commands([
+            PrepareAPI::class,
+            UndoAPI::class,
+            ]);
     }
 
     /**

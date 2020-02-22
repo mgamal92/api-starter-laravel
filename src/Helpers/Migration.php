@@ -62,6 +62,6 @@ final class Migration
     {
         $fileName = date('Y_m_d_His') . '_create_' . $this->tableName . '_table.php';
 
-        $this->filesystem->put(__DIR__.'/../../../../../database/migrations/'. $fileName .'.php', $this->migrationClass);
+        $this->filesystem->put(__DIR__.'/../../../../../database/migrations/'. $fileName, $this->migrationClass);
     }
 }
