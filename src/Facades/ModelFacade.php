@@ -24,6 +24,6 @@ final class ModelFacade
 
         $this->modelHelper->populateRelation($properties);
 
-        $this->modelHelper->writeModelInFile();
+        $this->modelHelper->write();
     }
 }

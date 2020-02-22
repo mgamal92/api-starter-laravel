@@ -18,6 +18,6 @@ final class RouteFacade
     {
         $this->routeHelper->populateRoutes($model);
 
-        $this->routeHelper->writeModelInFile();
+        $this->routeHelper->write();
     }
 }

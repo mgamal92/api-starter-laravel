@@ -4,8 +4,9 @@ namespace Barista\Helpers;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Barista\Contracts\Writable;
 
-final class Model
+final class Model implements Writable
 {
     const STUB_PATH = __DIR__.'/../../stubs/model/';
 
@@ -99,7 +100,7 @@ final class Model
         return PHP_EOL. $this->method;
     }
 
-    public function writeModelInFile()
+    public function write()
     {
         $this->filesystem->put(__DIR__.'/../../../../../app/'. $this->modelName .'.php', $this->modelClass);
     }

@@ -22,6 +22,6 @@ final class MigrationFacade
 
         $this->migrationHelper->populateColumns($properties);
 
-        $this->migrationHelper->writeMigrationInFile();
+        $this->migrationHelper->write();
     }
 }

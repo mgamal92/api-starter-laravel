@@ -2,10 +2,11 @@
 
 namespace Barista\Helpers;
 
+use Barista\Contracts\Writable;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-final class Route
+final class Route implements Writable
 {
     private const ROUTES_PATH = '/routes/api.php';
 
@@ -29,7 +30,7 @@ final class Route
         $this->routes .= sprintf("Route::resource('%s', '%s');", $slug, $controller);
     }
 
-    public function writeModelInFile()
+    public function write()
     {
         $this->filesystem->put(base_path().self::ROUTES_PATH, $this->routes);
     }

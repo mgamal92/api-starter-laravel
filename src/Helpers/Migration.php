@@ -2,10 +2,11 @@
 
 namespace Barista\Helpers;
 
+use Barista\Contracts\Writable;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-final class Migration
+final class Migration implements Writable
 {
     private const STUB_PATH = __DIR__.'/../../stubs/database/';
 
@@ -58,7 +59,7 @@ final class Migration
         $this->migrationClass = str_replace('// definition...', trim($definations) , $this->migrationClass);
     }
 
-    public function writeMigrationInFile()
+    public function write()
     {
         $fileName = date('Y_m_d_His') . '_create_' . $this->tableName . '_table.php';
 
