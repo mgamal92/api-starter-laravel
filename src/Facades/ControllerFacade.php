@@ -16,6 +16,10 @@ final class ControllerFacade
 
     public function populate($model)
     {
-        dd('generating controller');
+        $this->controllerHelper->populateNamespace();
+
+        $this->controllerHelper->populateName($model);
+
+        $this->controllerHelper->write();
     }
 }
