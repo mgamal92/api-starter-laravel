@@ -2,6 +2,7 @@
 
 namespace Barista;
 
+use Barista\Facades\ControllerFacade;
 use Barista\Facades\MigrationFacade;
 use Barista\Facades\ModelFacade;
 use Barista\Facades\RouteFacade;
@@ -39,7 +40,9 @@ final class Builder
 
     public function generateControllers()
     {
-        echo "generating controllers...";
+        foreach ($this->tree['models'] as $model => $properties) {
+            (new ControllerFacade)->populate($model);
+        }
     }
 
     public function generateFactory()

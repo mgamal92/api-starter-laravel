@@ -66,7 +66,7 @@ class PrepareAPI extends Command
         // $this->builder->generateFactory();
 
         // echo "\n";
-        // $this->builder->generateControllers();
+        $this->builder->generateControllers();
 
         $this->builder->generateRoutes();
         
