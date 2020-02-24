@@ -40,8 +40,8 @@ final class Builder
 
     public function generateControllers()
     {
-        foreach ($this->tree['models'] as $model => $properties) {
-            (new ControllerFacade)->populate($model);
+        foreach ($this->tree['controllers'] as $controller => $methods) {
+            (new ControllerFacade)->populate($controller, $methods);
         }
     }
 

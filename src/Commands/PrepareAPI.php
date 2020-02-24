@@ -54,22 +54,23 @@ class PrepareAPI extends Command
     {
         $file = $this->argument('file');
 
-        $tree = $this->parser->getContent(__DIR__.'/../../../../../'.$file);
+        $tree = $this->parser->getContent(base_path($file));
 
         $this->builder->prepare($tree);
 
-        $this->builder->generateModels();
+        // $this->builder->generateModels();
 
-        $this->builder->generateMigrations();
+        // $this->builder->generateMigrations();
 
+        $this->builder->generateControllers();
+
+        // $this->builder->generateRoutes();
+    
         // echo "\n";
         // $this->builder->generateFactory();
 
         // echo "\n";
-        $this->builder->generateControllers();
 
-        $this->builder->generateRoutes();
-        
         $this->info('The API endpoints has been generated sucessfully!');
     }
 }

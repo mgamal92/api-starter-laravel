@@ -14,11 +14,13 @@ final class ControllerFacade
         $this->controllerHelper = new Controller(new Filesystem);
     }
 
-    public function populate($model)
+    public function populate($controller, $methods)
     {
         $this->controllerHelper->populateNamespace();
 
-        $this->controllerHelper->populateName($model);
+        $this->controllerHelper->populateName($controller);
+
+        $this->controllerHelper->populateMethods($methods);
 
         $this->controllerHelper->write();
     }

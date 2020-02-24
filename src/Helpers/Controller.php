@@ -23,10 +23,25 @@ final class controller implements Writable
         $this->controllerClass = str_replace('DummyNamespace', 'App\Http\Controllers', $this->controllerClass);
     }
 
-    public function populateName($model)
+    public function populateName($controller)
     {
-        $this->controllerName = Str::studly($model).'Controller';
+        $this->controllerName = $controller;
         $this->controllerClass = str_replace('DummyClass', $this->controllerName, $this->controllerClass);
+    }
+
+    public function populateMethods($methods)
+    {
+        $controllersMethods = null;
+
+        $this->controllerClass = str_replace('// imports',  "use Illuminate\Http\Request;", $this->controllerClass);
+
+        foreach($methods as $method) {
+            $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
+
+            $controllersMethods .= PHP_EOL . str_replace("DummyMethod", $method, $methodStub). PHP_EOL;
+        }
+    
+        $this->controllerClass = str_replace('// methods',  trim($controllersMethods), $this->controllerClass);
     }
 
     public function write()

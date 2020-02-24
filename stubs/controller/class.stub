@@ -2,9 +2,9 @@
 
 namespace DummyNamespace;
 
-// imports...
+// imports
 
 class DummyClass extends Controller
 {
-    // methods...
+    // methods
 }

@@ -61,17 +61,17 @@ final class Model implements Writable
 
     public function populateRelation($properties)
     {
-        $methods = null;
+        $modelMethods = null;
 
         $foreignKeys = $this->getForeignKeys($properties);
 
         foreach($foreignKeys as $foreignKey) {
             $this->method = $this->filesystem->get(self::STUB_PATH.'method.stub');
 
-            $methods .= $this->buildRelationMethod($foreignKey);
+            $modelMethods .= $this->buildRelationMethod($foreignKey);
         }
         
-        $this->modelClass = str_replace('// methods',  trim($methods), $this->modelClass);
+        $this->modelClass = str_replace('// methods',  trim($modelMethods), $this->modelClass);
     }
 
     public function getForeignKeys($properties)
