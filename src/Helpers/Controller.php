@@ -33,15 +33,22 @@ final class controller implements Writable
     {
         $controllersMethods = null;
 
-        $this->controllerClass = str_replace('// imports',  "use Illuminate\Http\Request;", $this->controllerClass);
+        $controllerImports = null;
+        
+        
 
         foreach($methods as $method) {
             $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
 
             $controllersMethods .= PHP_EOL . str_replace("DummyMethod", $method, $methodStub). PHP_EOL;
         }
-    
-        $this->controllerClass = str_replace('// methods',  trim($controllersMethods), $this->controllerClass);
+
+        $modelName = str_replace("Controller", "", $this->controllerName);
+        $controllerImports .= "use Illuminate\Http\Request;".PHP_EOL;
+        $controllerImports .= "use App\\".$modelName.";"; 
+
+        $this->controllerClass = str_replace('// imports', trim($controllerImports), $this->controllerClass);
+        $this->controllerClass = str_replace('// methods', trim($controllersMethods), $this->controllerClass);
     }
 
     public function write()
