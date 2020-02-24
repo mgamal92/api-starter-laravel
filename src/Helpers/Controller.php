@@ -32,11 +32,8 @@ final class controller implements Writable
     public function populateMethods($methods)
     {
         $controllersMethods = null;
-
         $controllerImports = null;
         
-        
-
         foreach($methods as $method) {
             $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
 
