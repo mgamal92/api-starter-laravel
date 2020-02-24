@@ -33,11 +33,19 @@ final class controller implements Writable
     {
         $controllersMethods = null;
         $controllerImports = null;
-        
-        foreach($methods as $method) {
+        $methodBody = null;
+
+        $modelName = str_replace("Controller", "", $this->controllerName);
+
+        foreach($methods as $method => $body) {
+
             $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
 
-            $controllersMethods .= PHP_EOL . str_replace("DummyMethod", $method, $methodStub). PHP_EOL;
+            $controllersMethods .= PHP_EOL . str_replace("DummyMethod", $method, $methodStub). PHP_EOL; 
+
+            $methodBody = "return ". $modelName."::".$body['query']."();";
+
+            $controllersMethods = str_replace('//', $methodBody, $controllersMethods);
         }
 
         $modelName = str_replace("Controller", "", $this->controllerName);
@@ -46,6 +54,7 @@ final class controller implements Writable
 
         $this->controllerClass = str_replace('// imports', trim($controllerImports), $this->controllerClass);
         $this->controllerClass = str_replace('// methods', trim($controllersMethods), $this->controllerClass);
+        
     }
 
     public function write()
