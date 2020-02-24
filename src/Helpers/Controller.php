@@ -40,7 +40,7 @@ final class controller implements Writable
         $this->controllerClass = $this->setImports();
 
         foreach ($methodsNames as $methodName => $body) {
-            $methods .= $this->buildMethod($methodName, $body);
+            $methods .= $this->addMethod($methodName, $body);
         }
 
         return str_replace('// methods', trim($methods), $this->controllerClass);
@@ -55,7 +55,7 @@ final class controller implements Writable
         return str_replace('// imports', trim($imports), $this->controllerClass);
     }
 
-    public function buildMethod($methodName, $body)
+    public function addMethod($methodName, $body)
     {
         $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
 
