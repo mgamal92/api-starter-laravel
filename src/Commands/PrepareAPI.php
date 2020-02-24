@@ -52,24 +52,17 @@ class PrepareAPI extends Command
      */
     public function handle()
     {
-        $file = $this->argument('file');
-
-        $tree = $this->parser->getContent(base_path($file));
+        $tree = $this->parser->getContent(base_path($this->argument('file')));
 
         $this->builder->prepare($tree);
 
-        // $this->builder->generateModels();
+        $this->builder->generateModels();
 
-        // $this->builder->generateMigrations();
+        $this->builder->generateMigrations();
 
         $this->builder->generateControllers();
 
-        // $this->builder->generateRoutes();
-    
-        // echo "\n";
-        // $this->builder->generateFactory();
-
-        // echo "\n";
+        $this->builder->generateRoutes();
 
         $this->info('The API endpoints has been generated sucessfully!');
     }
