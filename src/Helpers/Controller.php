@@ -3,7 +3,6 @@
 namespace Barista\Helpers;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 use Barista\Contracts\Writable;
 
 final class controller implements Writable
@@ -23,38 +22,55 @@ final class controller implements Writable
         $this->controllerClass = str_replace('DummyNamespace', 'App\Http\Controllers', $this->controllerClass);
     }
 
-    public function populateName($controller)
+    public function populateName($name)
     {
-        $this->controllerName = $controller;
+        $this->controllerName = $name;
         $this->controllerClass = str_replace('DummyClass', $this->controllerName, $this->controllerClass);
     }
 
-    public function populateMethods($methods)
+    public function populateMethods($methodsNames)
     {
-        $controllersMethods = null;
-        $controllerImports = null;
-        $methodBody = null;
+        $this->controllerClass = $this->setMethods($methodsNames);
+    }
 
-        $modelName = str_replace("Controller", "", $this->controllerName);
+    public function setMethods($methodsNames)
+    {
+        $methods = null;
 
-        foreach($methods as $method => $body) {
+        $this->controllerClass = $this->setImports();
 
-            $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
-
-            $controllersMethods .= PHP_EOL . str_replace("DummyMethod", $method, $methodStub). PHP_EOL; 
-
-            $methodBody = "return ". $modelName."::".$body['query']."();";
-
-            $controllersMethods = str_replace('//', $methodBody, $controllersMethods);
+        foreach ($methodsNames as $methodName => $body) {
+            $methods .= $this->buildMethod($methodName, $body);
         }
 
-        $modelName = str_replace("Controller", "", $this->controllerName);
-        $controllerImports .= "use Illuminate\Http\Request;".PHP_EOL;
-        $controllerImports .= "use App\\".$modelName.";"; 
+        return str_replace('// methods', trim($methods), $this->controllerClass);
+    }
 
-        $this->controllerClass = str_replace('// imports', trim($controllerImports), $this->controllerClass);
-        $this->controllerClass = str_replace('// methods', trim($controllersMethods), $this->controllerClass);
-        
+    public function setImports()
+    {
+        $imports = null;
+        $imports .= "use Illuminate\Http\Request;".PHP_EOL;
+        $imports .= "use App\\".$this->model().";";
+
+        return str_replace('// imports', trim($imports), $this->controllerClass);
+    }
+
+    public function buildMethod($methodName, $body)
+    {
+        $methodStub = $this->filesystem->get(self::STUB_PATH.'method.stub');
+
+        $methods = PHP_EOL . str_replace("DummyMethod", $methodName, $methodStub). PHP_EOL;
+
+        $methodBody = "return ". $this->model()."::".$body['query']."();";
+
+        $methods = str_replace('//', $methodBody, $methods);
+
+        return $methods;
+    }
+
+    public function model()
+    {
+        return str_replace("Controller", "", $this->controllerName);
     }
 
     public function write()
