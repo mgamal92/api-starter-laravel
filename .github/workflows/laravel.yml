@@ -15,5 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install Dependencies
       run: composer install
+    - name: Inspire
+  
 
 
